@@ -1,0 +1,72 @@
+<div class="area-form-container">
+  <div class="header">
+    <button class="btn btn-outline-secondary" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Volver
+    </button>
+    <h2>{{ isEditMode ? 'Editar' : 'Crear' }} Área</h2>
+  </div>
+  
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="areaForm" (ngSubmit)="onSubmit()">
+        <!-- Alerta de éxito -->
+        <div *ngIf="successMessage" class="alert alert-success">
+          {{ successMessage }}
+        </div>
+        
+        <!-- Alerta de error -->
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
+        
+        <div class="row">
+          <!-- Nombre -->
+          <div class="col-md-6 form-group">
+            <label for="nombre">Nombre del Área</label>
+            <input
+              type="text"
+              id="nombre"
+              formControlName="nombre"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f['nombre'].errors }"
+            />
+            <div *ngIf="submitted && f['nombre'].errors" class="invalid-feedback">
+              <div *ngIf="f['nombre'].errors['required']">El nombre del área es obligatorio</div>
+            </div>
+          </div>
+          
+          <!-- Tipo -->
+          <div class="col-md-6 form-group">
+            <label for="tipo">Tipo de Área</label>
+            <select
+              id="tipo"
+              formControlName="tipo"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f['tipo'].errors }"
+            >
+              <option value="">Seleccione tipo de área</option>
+              <option value="Administrativa">Administrativa</option>
+              <option value="Operativa">Operativa</option>
+              <option value="Comercial">Comercial</option>
+              <option value="Técnica">Técnica</option>
+              <option value="Financiera">Financiera</option>
+              <option value="Recursos Humanos">Recursos Humanos</option>
+              <option value="Otra">Otra</option>
+            </select>
+            <div *ngIf="submitted && f['tipo'].errors" class="invalid-feedback">
+              <div *ngIf="f['tipo'].errors['required']">El tipo de área es obligatorio</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="goBack()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

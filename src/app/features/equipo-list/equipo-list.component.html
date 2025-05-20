@@ -1,0 +1,88 @@
+<div class="equipos-container">
+  <div class="header">
+    <h2>Gestión de Equipos</h2>
+    <button class="btn btn-primary" [routerLink]="['/dashboard/equipo/crear']">
+      Registrar Equipo
+    </button>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="loading-spinner" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Cargando equipos...</p>
+  </div>
+
+  <div class="table-responsive" *ngIf="!loading && equipos.length > 0">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Marca</th>
+          <th>Modelo</th>
+          <th>Serie</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let equipo of equipos">
+          <td>{{ equipo.id }}</td>
+          <td>{{ equipo.codigoEquipo }}</td>
+          <td>{{ equipo.tipo }}</td>
+          <td>{{ equipo.marca }}</td>
+          <td>{{ equipo.modelo }}</td>
+          <td>{{ equipo.serie }}</td>
+          <td>
+            <span class="badge" [ngClass]="equipo.estado === 'Activo' ? 'badge-success' : 'badge-danger'">
+              {{ equipo.estado }}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="btn btn-info btn-sm" (click)="viewDetails(equipo.id)">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-warning btn-sm" (click)="editEquipo(equipo.id)">
+            <i class="fas fa-edit"></i>
+             </button>
+            <button class="btn btn-danger btn-sm" (click)="deleteEquipo(equipo.id)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Paginación -->
+    <div class="pagination-container">
+      <button 
+        class="btn btn-sm" 
+        [disabled]="currentPage === 0"
+        (click)="onPageChange(currentPage - 1)">
+        Anterior
+      </button>
+      
+      <span class="page-info">
+        Página {{ currentPage + 1 }} de {{ totalPages }}
+      </span>
+      
+      <button 
+        class="btn btn-sm" 
+        [disabled]="currentPage === totalPages - 1"
+        (click)="onPageChange(currentPage + 1)">
+        Siguiente
+      </button>
+    </div>
+  </div>
+
+  <div class="no-data" *ngIf="!loading && equipos.length === 0">
+    <p>No hay equipos registrados.</p>
+    <button class="btn btn-primary" [routerLink]="['/dashboard/equipo/crear']"> 
+      Registrar Equipo
+    </button>
+  </div>
+</div>

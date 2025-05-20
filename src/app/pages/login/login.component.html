@@ -1,0 +1,74 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <img src="assets/images/logo.png" alt="Logo" class="logo">
+      <h2>Bienvenido al Sistema de Inventario</h2>
+      <p class="subtitle">Ingresa tus credenciales para continuar</p>
+    </div>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">
+          <i class="fas fa-user"></i>
+          <span>Usuario</span>
+        </label>
+        <input 
+          type="text" 
+          id="username" 
+          formControlName="username" 
+          class="form-control" 
+          placeholder="Ingresa tu nombre de usuario"
+          [ngClass]="{'is-invalid': loginForm.get('username')?.invalid && loginForm.get('username')?.touched}" 
+        >
+        <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="invalid-feedback">
+          El nombre de usuario es requerido
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">
+          <i class="fas fa-lock"></i>
+          <span>Contraseña</span>
+        </label>
+        <div class="password-input-container">
+          <input 
+            [type]="showPassword ? 'text' : 'password'" 
+            id="password" 
+            formControlName="password" 
+            class="form-control" 
+            placeholder="Ingresa tu contraseña"
+            [ngClass]="{'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}" 
+          >
+          <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+            <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+          </button>
+        </div>
+        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="invalid-feedback">
+          La contraseña es requerida
+        </div>
+      </div>
+      
+      <div class="remember-forgot">
+        <div class="remember-me">
+          <input type="checkbox" id="remember" class="custom-checkbox">
+          <label for="remember">Recordarme</label>
+        </div>
+        <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+      </div>
+      
+      <div *ngIf="isLoginFailed" class="alert alert-danger">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ errorMessage }}
+      </div>
+      
+      <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">
+        <span>Iniciar Sesión</span>
+        <i class="fas fa-sign-in-alt"></i>
+      </button>
+    </form>
+    
+    <div class="register-link">
+      ¿No tienes una cuenta? <a routerLink="/register">Regístrate aquí</a>
+    </div>
+  </div>
+</div>

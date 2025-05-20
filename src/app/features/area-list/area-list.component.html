@@ -1,0 +1,55 @@
+<div class="areas-container">
+  <div class="header">
+    <h2>Gestión de Áreas</h2>
+    <button class="btn btn-primary" [routerLink]="['/dashboard/areas/crear']">
+      Registrar Área
+    </button>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="loading-spinner" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Cargando áreas...</p>
+  </div>
+
+  <div class="table-responsive" *ngIf="!loading && areas.length > 0">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let area of areas">
+          <td>{{ area.id }}</td>
+          <td>{{ area.nombre }}</td>
+          <td>{{ area.tipo }}</td>
+          <td class="actions">
+            <button class="btn btn-info btn-sm" (click)="viewDetails(area.id)">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-warning btn-sm" (click)="editArea(area.id)">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="deleteArea(area.id)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="no-data" *ngIf="!loading && areas.length === 0">
+    <p>No hay áreas registradas.</p>
+    <button class="btn btn-primary" [routerLink]="['/dashboard/areas/crear']"> 
+      Registrar Área
+    </button>
+  </div>
+</div>
