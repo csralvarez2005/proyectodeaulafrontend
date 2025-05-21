@@ -1,0 +1,165 @@
+<div class="monitor-form-container">
+  <div class="header">
+    <button class="btn btn-outline-secondary" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Volver
+    </button>
+    <h2>{{ isEditMode ? 'Editar' : 'Crear' }} Monitor</h2>
+  </div>
+
+  <form [formGroup]="monitorForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <div class="form-cards-container">
+      <!-- Información general -->
+      <div class="card monitor-card">
+        <div class="card-header">Información general</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 form-group">
+              <label for="marca">Marca</label>
+              <input type="text" id="marca" formControlName="marca" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f['marca'].errors }" />
+              <div *ngIf="submitted && f['marca'].errors" class="invalid-feedback">
+                <div *ngIf="f['marca'].errors['required']">La marca es obligatoria</div>
+              </div>
+            </div>
+            <div class="col-md-4 form-group">
+              <label for="modelo">Modelo</label>
+              <input type="text" id="modelo" formControlName="modelo" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f['modelo'].errors }" />
+              <div *ngIf="submitted && f['modelo'].errors" class="invalid-feedback">
+                <div *ngIf="f['modelo'].errors['required']">El modelo es obligatorio</div>
+              </div>
+            </div>
+            <div class="col-md-4 form-group">
+              <label for="numeroSerie">Número de Serie</label>
+              <input type="text" id="numeroSerie" formControlName="numeroSerie" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f['numeroSerie'].errors }" />
+              <div *ngIf="submitted && f['numeroSerie'].errors" class="invalid-feedback">
+                <div *ngIf="f['numeroSerie'].errors['required']">El número de serie es obligatorio</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 form-group">
+              <label for="tamanoPantalla">Tamaño de Pantalla</label>
+              <input type="text" id="tamanoPantalla" formControlName="tamanoPantalla" class="form-control" />
+            </div>
+            <div class="col-md-4 form-group">
+              <label for="resolucion">Resolución</label>
+              <input type="text" id="resolucion" formControlName="resolucion" class="form-control" />
+            </div>
+            <div class="col-md-4 form-group">
+              <label for="tipoConector">Tipo de Conector</label>
+              <input type="text" id="tipoConector" formControlName="tipoConector" class="form-control" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 form-group">
+              <label for="estado">Estado</label>
+              <select id="estado" formControlName="estado" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f['estado'].errors }">
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+                <option value="En reparación">En reparación</option>
+                <option value="Dado de baja">Dado de baja</option>
+              </select>
+              <div *ngIf="submitted && f['estado'].errors" class="invalid-feedback">
+                <div *ngIf="f['estado'].errors['required']">El estado es obligatorio</div>
+              </div>
+            </div>
+            <div class="col-md-4 form-group">
+              <label for="esAjustable">¿Es Ajustable?</label>
+              <select id="esAjustable" formControlName="esAjustable" class="form-control">
+                <option [ngValue]="true">Sí</option>
+                <option [ngValue]="false">No</option>
+              </select>
+            </div>
+            <div class="col-md-4 form-group">
+              <label for="tieneAltavoces">¿Tiene Altavoces?</label>
+              <select id="tieneAltavoces" formControlName="tieneAltavoces" class="form-control">
+                <option [ngValue]="true">Sí</option>
+                <option [ngValue]="false">No</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <label for="observaciones">Observaciones</label>
+              <textarea id="observaciones" formControlName="observaciones" class="form-control" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información de compra y garantía -->
+      <div class="card monitor-card">
+        <div class="card-header">Información de compra y garantía</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label for="proveedor">Proveedor</label>
+              <input type="text" id="proveedor" formControlName="proveedor" class="form-control" />
+            </div>
+            <div class="col-md-6 form-group">
+              <label for="ordenDeCompra">Orden de Compra</label>
+              <input type="text" id="ordenDeCompra" formControlName="ordenDeCompra" class="form-control" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label for="factura">Factura</label>
+              <input type="text" id="factura" formControlName="factura" class="form-control" />
+            </div>
+            <div class="col-md-6 form-group">
+              <label for="fechaDeCompra">Fecha de Compra</label>
+              <input type="date" id="fechaDeCompra" formControlName="fechaDeCompra" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f['fechaDeCompra'].errors }" />
+              <div *ngIf="submitted && f['fechaDeCompra'].errors" class="invalid-feedback">
+                <div *ngIf="f['fechaDeCompra'].errors['required']">La fecha de compra es obligatoria</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label for="fechaFinGarantia">Fecha Fin Garantía</label>
+              <input type="date" id="fechaFinGarantia" formControlName="fechaFinGarantia" class="form-control" />
+            </div>
+            <div class="col-md-6 form-group">
+              <label for="garantia">Garantía</label>
+              <input type="text" id="garantia" formControlName="garantia" class="form-control" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label for="precio">Precio</label>
+              <input type="number" id="precio" formControlName="precio" class="form-control" min="0"
+                [ngClass]="{ 'is-invalid': submitted && f['precio'].errors }" />
+              <div *ngIf="submitted && f['precio'].errors" class="invalid-feedback">
+                <div *ngIf="f['precio'].errors['required']">El precio es obligatorio</div>
+                <div *ngIf="f['precio'].errors['min']">El precio debe ser positivo</div>
+              </div>
+            </div>
+            <div class="col-md-6 form-group">
+              <label for="recibidoPor">Recibido Por</label>
+              <input type="text" id="recibidoPor" formControlName="recibidoPor" class="form-control" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="goBack()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+      </button>
+    </div>
+  </form>
+</div>

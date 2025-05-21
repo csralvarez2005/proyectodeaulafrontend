@@ -1,0 +1,142 @@
+<div class="impresora-form-container">
+  <div class="header">
+    <button class="btn btn-outline-secondary" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Volver
+    </button>
+    <h2>{{ isEditMode ? 'Editar' : 'Crear' }} Impresora</h2>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="impresoraForm" (ngSubmit)="onSubmit()">
+        <div *ngIf="successMessage" class="alert alert-success">
+          {{ successMessage }}
+        </div>
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <label>Número de Serie</label>
+            <input type="text" formControlName="numeroSerie" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['numeroSerie'].errors }"/>
+            <div *ngIf="submitted && f['numeroSerie'].errors" class="invalid-feedback">
+              <div *ngIf="f['numeroSerie'].errors['required']">El número de serie es obligatorio</div>
+            </div>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Código Patrimonial</label>
+            <input type="text" formControlName="codigoPatrimonial" class="form-control"/>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Marca</label>
+            <input type="text" formControlName="marca" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['marca'].errors }"/>
+            <div *ngIf="submitted && f['marca'].errors" class="invalid-feedback">
+              <div *ngIf="f['marca'].errors['required']">La marca es obligatoria</div>
+            </div>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Modelo</label>
+            <input type="text" formControlName="modelo" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['modelo'].errors }"/>
+            <div *ngIf="submitted && f['modelo'].errors" class="invalid-feedback">
+              <div *ngIf="f['modelo'].errors['required']">El modelo es obligatorio</div>
+            </div>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Tipo de Impresora</label>
+            <input type="text" formControlName="tipoImpresora" class="form-control"/>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Tecnología de Impresión</label>
+            <input type="text" formControlName="tecnologiaImpresion" class="form-control"/>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Tipo de Conexión</label>
+            <input type="text" formControlName="tipoConexion" class="form-control"/>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Tiene Escáner</label>
+            <select formControlName="tieneEscaner" class="form-control">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Tiene WiFi</label>
+            <select formControlName="tieneWifi" class="form-control">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Tiene Dúplex</label>
+            <select formControlName="tieneDuplex" class="form-control">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Estado Físico</label>
+            <input type="text" formControlName="estadoFisico" class="form-control"/>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Condición</label>
+            <input type="text" formControlName="condicion" class="form-control"/>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Asignado a</label>
+            <input type="text" formControlName="asignadoA" class="form-control"/>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Área/Departamento</label>
+            <input type="text" formControlName="areaDepartamento" class="form-control"/>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Ubicación Física</label>
+            <input type="text" formControlName="ubicacionFisica" class="form-control"/>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Fecha de Adquisición</label>
+            <input type="date" formControlName="fechaAdquisicion" class="form-control"/>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Proveedor</label>
+            <input type="text" formControlName="proveedor" class="form-control"/>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Precio</label>
+            <input type="number" formControlName="precio" class="form-control"/>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Número de Factura</label>
+            <input type="text" formControlName="numeroFactura" class="form-control"/>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Garantía Vigente</label>
+            <select formControlName="garantiaVigente" class="form-control">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Fecha Vencimiento Garantía</label>
+            <input type="date" formControlName="fechaVencimientoGarantia" class="form-control"/>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Observaciones</label>
+            <input type="text" formControlName="observaciones" class="form-control"/>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Recibido por</label>
+            <input type="text" formControlName="recibidoPor" class="form-control"/>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="goBack()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

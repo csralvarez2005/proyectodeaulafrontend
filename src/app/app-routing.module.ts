@@ -10,24 +10,39 @@ import { AreaListComponent } from './features/area-list/area-list.component';
 import { AreaFormComponent } from './features/area-form/area-form.component';
 import { EquipoFormComponent } from './features/equipo-form/equipo-form.component';
 import { EquipoListComponent } from './features/equipo-list/equipo-list.component';
+import { AsignacionesListComponent } from './features/asignaciones-list/asignaciones-list.component';
+import { AsignacionesFormComponent } from './features/asignaciones-form/asignaciones-form.component';
+import { MonitorListComponent } from './features/monitor-list/monitor-list.component';
+import { MonitorFormComponent } from './features/monitor-form/monitor-form.component';
+import { ImpresoraListComponent } from './features/impresora-list/impresora-list.component';
+import { ImpresoraFormComponent } from './features/impresora-form/impresora-form.component';
 const routes: Routes = [ 
-  { path: '', redirectTo: 'login', pathMatch: 'full' }, // redirección al login 
-  { path: 'login', component: LoginComponent }, 
-  { path: 'register', component: RegisterComponent }, // ruta para el registro 
-  { path: 'dashboard', component: DashboardComponent, 
-    children: [ 
-      { path: 'funcionarios', component: FuncionarioListComponent }, 
-      { path: 'funcionarios/crear', component: FuncionarioFormComponent }, 
-      { path: 'funcionarios/editar/:id', component: FuncionarioFormComponent }, 
-      { path: 'areas', component: AreaListComponent }, 
-      { path: 'areas/crear', component: AreaFormComponent }, 
-      { path: 'areas/edit/:id', component: AreaFormComponent }, 
-      { path: 'equipo', component: EquipoListComponent }, 
-      { path: 'equipo/crear', component: EquipoFormComponent }, 
-      { path: 'equipo/edit/:id', component: EquipoFormComponent } 
-    ] 
-  }, 
-  { path: '**', component: NotFoundComponent } // ruta wildcard para página 404 
+   { path: '', redirectTo: 'login', pathMatch: 'full' }, // redirección al login 
+   { path: 'login', component: LoginComponent }, 
+   { path: 'register', component: RegisterComponent }, // ruta para el registro 
+   { path: 'dashboard', component: DashboardComponent, 
+     children: [ 
+       { path: 'funcionarios', component: FuncionarioListComponent }, 
+       { path: 'funcionarios/crear', component: FuncionarioFormComponent }, 
+       { path: 'funcionarios/editar/:id', component: FuncionarioFormComponent }, 
+       { path: 'areas', component: AreaListComponent }, 
+       { path: 'areas/crear', component: AreaFormComponent }, 
+       { path: 'areas/edit/:id', component: AreaFormComponent }, 
+       { path: 'equipo', component: EquipoListComponent }, 
+       { path: 'equipo/crear', component: EquipoFormComponent }, 
+       { path: 'equipo/edit/:id', component: EquipoFormComponent },
+       { path: 'asignaciones', component: AsignacionesListComponent },
+       { path: 'asignaciones/crear', component: AsignacionesFormComponent },
+       { path: 'asignaciones/editar/:id', component: AsignacionesFormComponent },
+       { path: 'monitores', component: MonitorListComponent },
+       { path: 'monitores/crear', component: MonitorFormComponent },
+       { path: 'monitores/editar/:id', component: MonitorFormComponent },
+        { path: 'impresoras', component: ImpresoraListComponent },
+       { path: 'impresoras/crear', component: ImpresoraFormComponent },
+       { path: 'impresoras/editar/:id', component: ImpresoraFormComponent }
+     ] 
+   }, 
+   { path: '**', component: NotFoundComponent } // ruta wildcard para página 404 
 ];
 
 @NgModule({

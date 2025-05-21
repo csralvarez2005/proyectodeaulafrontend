@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { authInterceptorProviders } from './interceptors/auth.interceptor';
 import { LoginComponent } from './pages/login/login.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { CommonModule } from '@angular/common';
 import { RegisterComponent } from './pages/register/register.component';
@@ -18,6 +18,12 @@ import { AreaListComponent } from './features/area-list/area-list.component';
 import { AreaFormComponent } from './features/area-form/area-form.component';
 import { EquipoFormComponent } from './features/equipo-form/equipo-form.component';
 import { EquipoListComponent } from './features/equipo-list/equipo-list.component';
+import { AsignacionesListComponent } from './features/asignaciones-list/asignaciones-list.component';
+import { AsignacionesFormComponent } from './features/asignaciones-form/asignaciones-form.component';
+import { MonitorFormComponent } from './features/monitor-form/monitor-form.component';
+import { MonitorListComponent } from './features/monitor-list/monitor-list.component';
+import { ImpresoraFormComponent } from './features/impresora-form/impresora-form.component';
+import { ImpresoraListComponent } from './features/impresora-list/impresora-list.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +37,13 @@ import { EquipoListComponent } from './features/equipo-list/equipo-list.componen
     AreaListComponent,
     AreaFormComponent,
     EquipoFormComponent,
-    EquipoListComponent
+    EquipoListComponent,
+    AsignacionesListComponent,
+    AsignacionesFormComponent,
+    MonitorFormComponent,
+    MonitorListComponent,
+    ImpresoraFormComponent,
+    ImpresoraListComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +51,8 @@ import { EquipoListComponent } from './features/equipo-list/equipo-list.componen
     BrowserAnimationsModule,
      HttpClientModule,
      ReactiveFormsModule,
-     CommonModule
+     CommonModule,
+     FormsModule
   ],
   providers: [
     authInterceptorProviders,

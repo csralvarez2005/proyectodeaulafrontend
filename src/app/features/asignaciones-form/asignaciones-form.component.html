@@ -1,0 +1,72 @@
+<div class="asignacion-form-container">
+  <div class="header">
+    <button class="btn btn-outline-secondary" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Volver
+    </button>
+    <h2>{{ isEditMode ? 'Editar' : 'Crear' }} Asignación</h2>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="asignacionForm" (ngSubmit)="onSubmit()">
+        <div *ngIf="successMessage" class="alert alert-success">
+          {{ successMessage }}
+        </div>
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <label for="fechaAsignacion">Fecha de Asignación</label>
+            <input type="date" id="fechaAsignacion" formControlName="fechaAsignacion" class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f['fechaAsignacion'].errors }" />
+            <div *ngIf="submitted && f['fechaAsignacion'].errors" class="invalid-feedback">
+              <div *ngIf="f['fechaAsignacion'].errors['required']">La fecha es obligatoria</div>
+            </div>
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="area">Área</label>
+            <select id="area" formControlName="area" class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f['area'].errors }">
+              <option [ngValue]="null">Seleccione área</option>
+              <option *ngFor="let area of areas" [ngValue]="area">{{ area.nombre }}</option>
+            </select>
+            <div *ngIf="submitted && f['area'].errors" class="invalid-feedback">
+              <div *ngIf="f['area'].errors['required']">El área es obligatoria</div>
+            </div>
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="equipo">Equipo</label>
+            <select id="equipo" formControlName="equipo" class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f['equipo'].errors }">
+              <option [ngValue]="null">Seleccione equipo</option>
+              <option *ngFor="let equipo of equipos" [ngValue]="equipo">{{ equipo.codigoEquipo }}</option>
+            </select>
+            <div *ngIf="submitted && f['equipo'].errors" class="invalid-feedback">
+              <div *ngIf="f['equipo'].errors['required']">El equipo es obligatorio</div>
+            </div>
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="funcionario">Funcionario</label>
+            <select id="funcionario" formControlName="funcionario" class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f['funcionario'].errors }">
+              <option [ngValue]="null">Seleccione funcionario</option>
+              <option *ngFor="let funcionario of funcionarios" [ngValue]="funcionario">
+                {{ funcionario.nombreFuncionario }} {{ funcionario.apellidoFuncionario }}
+              </option>
+            </select>
+            <div *ngIf="submitted && f['funcionario'].errors" class="invalid-feedback">
+              <div *ngIf="f['funcionario'].errors['required']">El funcionario es obligatorio</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="goBack()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

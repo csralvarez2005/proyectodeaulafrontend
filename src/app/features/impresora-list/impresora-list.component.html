@@ -1,0 +1,58 @@
+<div class="impresoras-container">
+  <div class="header">
+    <h2>Lista de Impresoras</h2>
+    <button class="btn btn-primary" (click)="crearImpresora()">Nueva Impresora</button>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div class="table-responsive" *ngIf="impresoras && impresoras.length > 0">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>N° Serie</th>
+          <th>Marca</th>
+          <th>Modelo</th>
+          <th>Tipo</th>
+          <th>Asignado a</th>
+          <th>Área</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let impresora of impresoras">
+          <td>{{ impresora.numeroSerie }}</td>
+          <td>{{ impresora.marca }}</td>
+          <td>{{ impresora.modelo }}</td>
+          <td>{{ impresora.tipoImpresora }}</td>
+          <td>{{ impresora.asignadoA }}</td>
+          <td>{{ impresora.areaDepartamento }}</td>
+          <td>{{ impresora.estadoFisico }}</td>
+       <td class="actions">
+  <button class="btn btn-view btn-sm" (click)="verImpresora(impresora.idImpresora!)">
+    <i class="fas fa-eye"></i>
+  </button>
+  <button class="btn btn-edit btn-sm" (click)="editarImpresora(impresora.idImpresora!)">
+    <i class="fas fa-edit"></i>
+  </button>
+  <button class="btn btn-delete btn-sm" (click)="deleteImpresora(impresora.idImpresora!)">
+    <i class="fas fa-trash-alt"></i>
+  </button>
+</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="impresoras && impresoras.length === 0 && !loading" class="no-data">
+    No hay impresoras registradas.
+  </div>
+
+  <div class="loading-spinner" *ngIf="loading">
+    <div class="spinner"></div>
+    <span>Cargando...</span>
+  </div>
+</div>
