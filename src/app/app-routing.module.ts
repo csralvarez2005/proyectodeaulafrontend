@@ -16,6 +16,7 @@ import { MonitorListComponent } from './features/monitor-list/monitor-list.compo
 import { MonitorFormComponent } from './features/monitor-form/monitor-form.component';
 import { ImpresoraListComponent } from './features/impresora-list/impresora-list.component';
 import { ImpresoraFormComponent } from './features/impresora-form/impresora-form.component';
+import { MigracionComponent } from './features/migracion/migracion.component';
 const routes: Routes = [ 
    { path: '', redirectTo: 'login', pathMatch: 'full' }, // redirección al login 
    { path: 'login', component: LoginComponent }, 
@@ -39,7 +40,8 @@ const routes: Routes = [
        { path: 'monitores/editar/:id', component: MonitorFormComponent },
         { path: 'impresoras', component: ImpresoraListComponent },
        { path: 'impresoras/crear', component: ImpresoraFormComponent },
-       { path: 'impresoras/editar/:id', component: ImpresoraFormComponent }
+       { path: 'impresoras/editar/:id', component: ImpresoraFormComponent },
+         { path: 'migracion', component: MigracionComponent },
      ] 
    }, 
    { path: '**', component: NotFoundComponent } // ruta wildcard para página 404 

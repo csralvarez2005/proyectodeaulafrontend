@@ -24,6 +24,7 @@ import { MonitorFormComponent } from './features/monitor-form/monitor-form.compo
 import { MonitorListComponent } from './features/monitor-list/monitor-list.component';
 import { ImpresoraFormComponent } from './features/impresora-form/impresora-form.component';
 import { ImpresoraListComponent } from './features/impresora-list/impresora-list.component';
+import { MigracionComponent } from './features/migracion/migracion.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { ImpresoraListComponent } from './features/impresora-list/impresora-list
     MonitorFormComponent,
     MonitorListComponent,
     ImpresoraFormComponent,
-    ImpresoraListComponent
+    ImpresoraListComponent,
+    MigracionComponent
   ],
   imports: [
     BrowserModule,

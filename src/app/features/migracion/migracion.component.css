@@ -1,0 +1,19 @@
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #343a40;
+}
+
+button {
+  min-width: 180px;
+}
+
+.alert {
+  font-size: 1rem;
+}

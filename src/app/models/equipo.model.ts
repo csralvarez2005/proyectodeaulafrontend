@@ -1,3 +1,5 @@
+import { Area } from './area.model';
+import { Monitor } from './monitor.model';
 export interface Equipo {
   id: number;
 
@@ -50,4 +52,9 @@ export interface Equipo {
 
   // Estado
   estado: string;
+
+    
+   // Relaciones
+   monitores?: Monitor[]; 
+    areas?: Area[]; // Relación con áreas
 }

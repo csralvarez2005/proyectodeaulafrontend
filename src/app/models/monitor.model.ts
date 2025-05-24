@@ -1,3 +1,5 @@
+
+import { Equipo } from './equipo.model';
 export interface Monitor {
   id: number;
   marca: string;
@@ -18,4 +20,5 @@ export interface Monitor {
   precio: number;
   recibidoPor: string;
   proveedor: string;
+  equipo?: Equipo | null;
 }

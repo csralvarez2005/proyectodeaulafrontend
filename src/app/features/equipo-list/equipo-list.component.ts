@@ -76,4 +76,6 @@ editEquipo(id: number): void {
   crearEquipo() {
     this.router.navigate(['/dashboard/equipo/crear']);
   }
+
+  
 }

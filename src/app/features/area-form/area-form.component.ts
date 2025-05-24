@@ -9,12 +9,14 @@ import { AreaService } from 'src/app/services/area.service';
   templateUrl: './area-form.component.html',
   styleUrls: ['./area-form.component.css']
 })
-export class AreaFormComponent implements OnInit{
-   areaForm: FormGroup = this.formBuilder.group({
+export class AreaFormComponent implements OnInit {
+
+  areaForm: FormGroup = this.formBuilder.group({
     nombre: ['', Validators.required],
-    tipo: ['', Validators.required]
+    tipo: ['', Validators.required],
+    abreviatura: ['', [Validators.required, Validators.maxLength(5)]]
   });
-  
+
   isEditMode: boolean = false;
   areaId: number = 0;
   loading = false;
@@ -30,8 +32,6 @@ export class AreaFormComponent implements OnInit{
   ) { }
 
   ngOnInit(): void {
-    this.initForm();
-    
     // Verificar si estamos en modo edición
     this.route.params.subscribe(params => {
       if (params['id']) {
@@ -45,20 +45,14 @@ export class AreaFormComponent implements OnInit{
   // Getter para acceder fácilmente a los controles del formulario
   get f() { return this.areaForm.controls; }
 
-  initForm(): void {
-    this.areaForm = this.formBuilder.group({
-      nombre: ['', Validators.required],
-      tipo: ['', Validators.required]
-    });
-  }
-
   loadArea(id: number): void {
     this.loading = true;
     this.areaService.getAreaById(id).subscribe(
       (area: Area) => {
         this.areaForm.patchValue({
           nombre: area.nombre,
-          tipo: area.tipo
+          tipo: area.tipo,
+          abreviatura: area.abreviatura
         });
         this.loading = false;
       },
@@ -111,5 +105,4 @@ export class AreaFormComponent implements OnInit{
   goBack(): void {
     this.router.navigate(['/dashboard/areas']);
   }
-
 }

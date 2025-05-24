@@ -5,7 +5,7 @@
     </button>
     <h2>{{ isEditMode ? 'Editar' : 'Crear' }} Área</h2>
   </div>
-  
+   
   <div class="card">
     <div class="card-body">
       <form [formGroup]="areaForm" (ngSubmit)="onSubmit()">
@@ -13,12 +13,12 @@
         <div *ngIf="successMessage" class="alert alert-success">
           {{ successMessage }}
         </div>
-        
+                 
         <!-- Alerta de error -->
         <div *ngIf="errorMessage" class="alert alert-danger">
           {{ errorMessage }}
         </div>
-        
+                 
         <div class="row">
           <!-- Nombre -->
           <div class="col-md-6 form-group">
@@ -34,7 +34,7 @@
               <div *ngIf="f['nombre'].errors['required']">El nombre del área es obligatorio</div>
             </div>
           </div>
-          
+                     
           <!-- Tipo -->
           <div class="col-md-6 form-group">
             <label for="tipo">Tipo de Área</label>
@@ -58,7 +58,28 @@
             </div>
           </div>
         </div>
-        
+
+        <div class="row">
+          <!-- Abreviatura -->
+          <div class="col-md-6 form-group">
+            <label for="abreviatura">Abreviatura</label>
+            <input
+              type="text"
+              id="abreviatura"
+              formControlName="abreviatura"
+              class="form-control"
+              maxlength="10"
+              placeholder="Ej: ADM, OPE, COM"
+              [ngClass]="{ 'is-invalid': submitted && f['abreviatura'].errors }"
+            />
+            <small class="form-text text-muted">Máximo 10 caracteres</small>
+            <div *ngIf="submitted && f['abreviatura'].errors" class="invalid-feedback">
+              <div *ngIf="f['abreviatura'].errors['required']">La abreviatura es obligatoria</div>
+              <div *ngIf="f['abreviatura'].errors['maxlength']">La abreviatura no puede exceder 10 caracteres</div>
+            </div>
+          </div>
+        </div>
+                 
         <div class="form-actions">
           <button type="submit" class="btn btn-primary" [disabled]="loading">
             <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>

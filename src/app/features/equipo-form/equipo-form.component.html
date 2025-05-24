@@ -1,302 +1,427 @@
-<div class="equipo-form-container">
+<form
+  class="equipo-form-container"
+  [formGroup]="equipoForm"
+  (ngSubmit)="onSubmit()"
+>
   <div class="header">
-    <button class="btn btn-outline-secondary" (click)="goBack()">
-      <i class="fas fa-arrow-left"></i> Volver
-    </button>
-    <h2>{{ isEditMode ? 'Editar' : 'Crear' }} Equipo</h2>
+    <h2>Formulario de Registro de Equipo</h2>
   </div>
 
-  <form [formGroup]="equipoForm" (ngSubmit)="onSubmit()">
-    <div *ngIf="successMessage" class="alert alert-success">
-      {{ successMessage }}
-    </div>
-    <div *ngIf="errorMessage" class="alert alert-danger">
-      {{ errorMessage }}
-    </div>
-
-    <div class="form-cards-container">
-      <!-- Información general -->
-      <div class="card equipo-card">
-        <div class="card-header">Información general</div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-6 form-group">
-              <label for="codigoEquipo">Código del Equipo</label>
-              <input type="text" id="codigoEquipo" formControlName="codigoEquipo" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f['codigoEquipo'].errors }" />
-              <div *ngIf="submitted && f['codigoEquipo'].errors" class="invalid-feedback">
-                <div *ngIf="f['codigoEquipo'].errors['required']">El código del equipo es obligatorio</div>
-              </div>
-            </div>
-            <div class="col-md-6 form-group">
-              <label for="tipo">Tipo de Equipo</label>
-              <select id="tipo" formControlName="tipo" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f['tipo'].errors }">
-                <option value="">Seleccione tipo de equipo</option>
-                <option value="Computador">Computador</option>
-                <option value="Laptop">Laptop</option>
-                <option value="Impresora">Impresora</option>
-                <option value="Servidor">Servidor</option>
-                <option value="Monitor">Monitor</option>
-                <option value="Otro">Otro</option>
-              </select>
-              <div *ngIf="submitted && f['tipo'].errors" class="invalid-feedback">
-                <div *ngIf="f['tipo'].errors['required']">El tipo de equipo es obligatorio</div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 form-group">
-              <label for="marca">Marca</label>
-              <input type="text" id="marca" formControlName="marca" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f['marca'].errors }" />
-              <div *ngIf="submitted && f['marca'].errors" class="invalid-feedback">
-                <div *ngIf="f['marca'].errors['required']">La marca es obligatoria</div>
-              </div>
-            </div>
-            <div class="col-md-4 form-group">
-              <label for="modelo">Modelo</label>
-              <input type="text" id="modelo" formControlName="modelo" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f['modelo'].errors }" />
-              <div *ngIf="submitted && f['modelo'].errors" class="invalid-feedback">
-                <div *ngIf="f['modelo'].errors['required']">El modelo es obligatorio</div>
-              </div>
-            </div>
-            <div class="col-md-4 form-group">
-              <label for="serie">Número de Serie</label>
-              <input type="text" id="serie" formControlName="serie" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f['serie'].errors }" />
-              <div *ngIf="submitted && f['serie'].errors" class="invalid-feedback">
-                <div *ngIf="f['serie'].errors['required']">El número de serie es obligatorio</div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6 form-group">
-              <label for="ubicacionDelEquipo">Ubicación del Equipo</label>
-              <input type="text" id="ubicacionDelEquipo" formControlName="ubicacionDelEquipo" class="form-control" />
-            </div>
-            <div class="col-md-6 form-group">
-              <label for="utilizacion">Utilización</label>
-              <input type="text" id="utilizacion" formControlName="utilizacion" class="form-control" />
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6 form-group">
-              <label for="recibidoPor">Recibido Por</label>
-              <input type="text" id="recibidoPor" formControlName="recibidoPor" class="form-control" />
-            </div>
-            <div class="col-md-6 form-group">
-              <label for="descripcion">Descripción</label>
-              <textarea id="descripcion" formControlName="descripcion" class="form-control" rows="2"></textarea>
-            </div>
-          </div>
-        </div>
+  <div class="form-cards-container">
+    <!-- Información General -->
+    <div class="equipo-card">
+      <div class="card-header text-center text-white bg-primary">
+        Información General
       </div>
-
-      <!-- Información de compra y garantía -->
-      <div class="card equipo-card">
-        <div class="card-header">Información de compra y garantía</div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-6 form-group">
-              <label for="proveedor">Proveedor</label>
-              <input type="text" id="proveedor" formControlName="proveedor" class="form-control" />
-            </div>
-            <div class="col-md-6 form-group">
-              <label for="ordenDeCompra">Orden de Compra</label>
-              <input type="text" id="ordenDeCompra" formControlName="ordenDeCompra" class="form-control" />
-            </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="area">Área</label>
+        <select
+  class="form-control"
+  formControlName="areaSeleccionada"
+  (change)="onAreaSeleccionada()"
+>
+  <option value="">Seleccione un área</option>
+  <option *ngFor="let area of areas" [value]="area.id">
+    {{ area.nombre }}
+  </option>
+</select>
           </div>
-          <div class="row">
-            <div class="col-md-6 form-group">
-              <label for="factura">Factura</label>
-              <input type="text" id="factura" formControlName="factura" class="form-control" />
-            </div>
-            <div class="col-md-6 form-group">
-              <label for="fechaDeCompra">Fecha de Compra</label>
-              <input type="date" id="fechaDeCompra" formControlName="fechaDeCompra" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f['fechaDeCompra'].errors }" />
-              <div *ngIf="submitted && f['fechaDeCompra'].errors" class="invalid-feedback">
-                <div *ngIf="f['fechaDeCompra'].errors['required']">La fecha de compra es obligatoria</div>
-              </div>
-            </div>
+          <div class="form-group col-md-6">
+            <label for="codigoEquipo">Código del Equipo</label>
+            <input
+              type="text"
+              class="form-control"
+              id="codigoEquipo"
+              formControlName="codigoEquipo"
+              [readonly]="true"
+              placeholder="Se genera automáticamente al seleccionar el área"
+            />
           </div>
-          <div class="row">
-            <div class="col-md-6 form-group">
-              <label for="fechaFinGarantia">Fecha Fin Garantía</label>
-              <input type="date" id="fechaFinGarantia" formControlName="fechaFinGarantia" class="form-control" />
-            </div>
-            <div class="col-md-6 form-group">
-              <label for="garantia">Garantía</label>
-              <input type="text" id="garantia" formControlName="garantia" class="form-control" />
-            </div>
+          <div class="form-group col-md-6">
+            <label for="descripcion">Descripción</label>
+            <input
+              type="text"
+              class="form-control"
+              id="descripcion"
+              formControlName="descripcion"
+            />
           </div>
-          <div class="row">
-            <div class="col-md-6 form-group">
-              <label for="precio">Precio</label>
-              <input type="number" id="precio" formControlName="precio" class="form-control" min="0"
-                [ngClass]="{ 'is-invalid': submitted && f['precio'].errors }" />
-              <div *ngIf="submitted && f['precio'].errors" class="invalid-feedback">
-                <div *ngIf="f['precio'].errors['required']">El precio es obligatorio</div>
-                <div *ngIf="f['precio'].errors['min']">El precio debe ser positivo</div>
-              </div>
-            </div>
+          <div class="form-group col-md-6">
+            <label for="tipo">Tipo</label>
+            <input
+              type="text"
+              class="form-control"
+              id="tipo"
+              formControlName="tipo"
+            />
           </div>
-        </div>
-      </div>
-
-      <!-- Hardware -->
-      <div class="card equipo-card">
-        <div class="card-header">Hardware</div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-4 form-group">
-              <label for="procesador">Procesador</label>
-              <input type="text" id="procesador" formControlName="procesador" class="form-control" />
-            </div>
-            <div class="col-md-4 form-group">
-              <label for="memoriaRamGB">Memoria RAM (GB)</label>
-              <input type="number" id="memoriaRamGB" formControlName="memoriaRamGB" class="form-control" min="0" />
-            </div>
-            <div class="col-md-4 form-group">
-              <label for="almacenamientoGB">Almacenamiento (GB)</label>
-              <input type="number" id="almacenamientoGB" formControlName="almacenamientoGB" class="form-control" min="0" />
-            </div>
+          <div class="form-group col-md-6">
+            <label for="modelo">Modelo</label>
+            <input
+              type="text"
+              class="form-control"
+              id="modelo"
+              formControlName="modelo"
+            />
           </div>
-          <div class="row">
-            <div class="col-md-4 form-group">
-              <label for="tipoAlmacenamiento">Tipo de Almacenamiento</label>
-              <input type="text" id="tipoAlmacenamiento" formControlName="tipoAlmacenamiento" class="form-control" />
-            </div>
-            <div class="col-md-4 form-group">
-              <label for="placaBase">Placa Base</label>
-              <input type="text" id="placaBase" formControlName="placaBase" class="form-control" />
-            </div>
-            <div class="col-md-4 form-group">
-              <label for="fuentePoderWatts">Fuente de Poder (Watts)</label>
-              <input type="number" id="fuentePoderWatts" formControlName="fuentePoderWatts" class="form-control" min="0" />
-            </div>
+          <div class="form-group col-md-6">
+            <label for="marca">Marca</label>
+            <input
+              type="text"
+              class="form-control"
+              id="marca"
+              formControlName="marca"
+            />
           </div>
-          <div class="row">
-            <div class="col-md-4 form-group">
-              <label for="tarjetaGrafica">Tarjeta Gráfica</label>
-              <input type="text" id="tarjetaGrafica" formControlName="tarjetaGrafica" class="form-control" />
-            </div>
-            <div class="col-md-4 form-group">
-              <label for="tieneTarjetaRed">¿Tiene Tarjeta de Red?</label>
-              <select id="tieneTarjetaRed" formControlName="tieneTarjetaRed" class="form-control">
-                <option [ngValue]="true">Sí</option>
-                <option [ngValue]="false">No</option>
-              </select>
-            </div>
-            <div class="col-md-4 form-group">
-              <label for="tieneTarjetaSonido">¿Tiene Tarjeta de Sonido?</label>
-              <select id="tieneTarjetaSonido" formControlName="tieneTarjetaSonido" class="form-control">
-                <option [ngValue]="true">Sí</option>
-                <option [ngValue]="false">No</option>
-              </select>
-            </div>
+          <div class="form-group col-md-6">
+            <label for="serie">Serie</label>
+            <input
+              type="text"
+              class="form-control"
+              id="serie"
+              formControlName="serie"
+            />
           </div>
-          <div class="row">
-            <div class="col-md-4 form-group">
-              <label for="gabinete">Gabinete</label>
-              <input type="text" id="gabinete" formControlName="gabinete" class="form-control" />
-            </div>
-            <div class="col-md-4 form-group">
-              <label for="perifericosEntrada">Periféricos de Entrada</label>
-              <input type="text" id="perifericosEntrada" formControlName="perifericosEntrada" class="form-control" />
-            </div>
-            <div class="col-md-4 form-group">
-              <label for="perifericosSalida">Periféricos de Salida</label>
-              <input type="text" id="perifericosSalida" formControlName="perifericosSalida" class="form-control" />
-            </div>
+          <div class="form-group col-md-6">
+            <label for="ubicacionDelEquipo">Ubicación</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ubicacionDelEquipo"
+              formControlName="ubicacionDelEquipo"
+            />
           </div>
-          <div class="row">
-            <div class="col-md-6 form-group">
-              <label for="componentes">Componentes</label>
-              <input type="text" id="componentes" formControlName="componentes" class="form-control" />
-            </div>
-            <div class="col-md-6 form-group">
-              <label for="accesorios">Accesorios</label>
-              <input type="text" id="accesorios" formControlName="accesorios" class="form-control" />
-            </div>
+          <div class="form-group col-md-6">
+            <label for="utilizacion">Utilización</label>
+            <input
+              type="text"
+              class="form-control"
+              id="utilizacion"
+              formControlName="utilizacion"
+            />
           </div>
-        </div>
-      </div>
-
-      <!-- Software -->
-      <div class="card equipo-card">
-        <div class="card-header">Software</div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-4 form-group">
-              <label for="sistemaOperativo">Sistema Operativo</label>
-              <input type="text" id="sistemaOperativo" formControlName="sistemaOperativo" class="form-control" />
-            </div>
-            <div class="col-md-4 form-group">
-              <label for="versionSO">Versión SO</label>
-              <input type="text" id="versionSO" formControlName="versionSO" class="form-control" />
-            </div>
-            <div class="col-md-4 form-group">
-              <label for="driversInstalados">Drivers Instalados</label>
-              <input type="text" id="driversInstalados" formControlName="driversInstalados" class="form-control" />
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6 form-group">
-              <label for="programasInstalados">Programas Instalados</label>
-              <input type="text" id="programasInstalados" formControlName="programasInstalados" class="form-control" />
-            </div>
-            <div class="col-md-6 form-group">
-              <label for="utilidadesSistema">Utilidades del Sistema</label>
-              <input type="text" id="utilidadesSistema" formControlName="utilidadesSistema" class="form-control" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Red / Configuración técnica -->
-      <div class="card equipo-card">
-        <div class="card-header">Red / Configuración técnica</div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-6 form-group">
-              <label for="direccionIP">Dirección IP</label>
-              <input type="text" id="direccionIP" formControlName="direccionIP" class="form-control" />
-            </div>
-            <div class="col-md-6 form-group">
-              <label for="direccionMAC">Dirección MAC</label>
-              <input type="text" id="direccionMAC" formControlName="direccionMAC" class="form-control" />
-            </div>
+          <div class="form-group col-md-6">
+            <label for="recibidoPor">Recibido Por</label>
+            <input
+              type="text"
+              class="form-control"
+              id="recibidoPor"
+              formControlName="recibidoPor"
+            />
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Estado y acciones -->
-    <div class="row">
-      <div class="col-md-6 form-group">
-        <label for="estado">Estado</label>
-        <select id="estado" formControlName="estado" class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f['estado'].errors }">
-          <option value="Activo">Activo</option>
-          <option value="Inactivo">Inactivo</option>
-          <option value="En reparación">En reparación</option>
-          <option value="De baja">De baja</option>
-        </select>
-        <div *ngIf="submitted && f['estado'].errors" class="invalid-feedback">
-          <div *ngIf="f['estado'].errors['required']">El estado es obligatorio</div>
+    <!-- Compra y Garantía -->
+    <div class="equipo-card">
+      <div class="card-header text-center text-white bg-primary">
+        Compra y Garantía
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="proveedor">Proveedor</label>
+            <input
+              type="text"
+              class="form-control"
+              id="proveedor"
+              formControlName="proveedor"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="ordenDeCompra">Orden de Compra</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ordenDeCompra"
+              formControlName="ordenDeCompra"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="factura">Factura</label>
+            <input
+              type="text"
+              class="form-control"
+              id="factura"
+              formControlName="factura"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="fechaDeCompra">Fecha de Compra</label>
+            <input
+              type="date"
+              class="form-control"
+              id="fechaDeCompra"
+              formControlName="fechaDeCompra"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="fechaFinGarantia">Fin de Garantía</label>
+            <input
+              type="date"
+              class="form-control"
+              id="fechaFinGarantia"
+              formControlName="fechaFinGarantia"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="garantia">Tipo de Garantía</label>
+            <input
+              type="text"
+              class="form-control"
+              id="garantia"
+              formControlName="garantia"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="precio">Precio</label>
+            <input
+              type="number"
+              class="form-control"
+              id="precio"
+              formControlName="precio"
+              min="0"
+              step="0.01"
+            />
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="form-actions">
-      <button type="submit" class="btn btn-primary" [disabled]="loading">
-        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-        {{ isEditMode ? 'Actualizar' : 'Guardar' }}
-      </button>
-      <button type="button" class="btn btn-secondary" (click)="goBack()">Cancelar</button>
+    <!-- Hardware -->
+    <div class="equipo-card">
+      <div class="card-header text-center text-white bg-primary">Hardware</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="procesador">Procesador</label>
+            <input
+              type="text"
+              class="form-control"
+              id="procesador"
+              formControlName="procesador"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="memoriaRamGB">Memoria RAM (GB)</label>
+            <input
+              type="number"
+              class="form-control"
+              id="memoriaRamGB"
+              formControlName="memoriaRamGB"
+              min="0"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="almacenamientoGB">Almacenamiento (GB)</label>
+            <input
+              type="number"
+              class="form-control"
+              id="almacenamientoGB"
+              formControlName="almacenamientoGB"
+              min="0"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="tipoAlmacenamiento">Tipo de Almacenamiento</label>
+            <input
+              type="text"
+              class="form-control"
+              id="tipoAlmacenamiento"
+              formControlName="tipoAlmacenamiento"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="placaBase">Placa Base</label>
+            <input
+              type="text"
+              class="form-control"
+              id="placaBase"
+              formControlName="placaBase"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="fuentePoderWatts">Fuente de Poder (W)</label>
+            <input
+              type="number"
+              class="form-control"
+              id="fuentePoderWatts"
+              formControlName="fuentePoderWatts"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="tarjetaGrafica">Tarjeta Gráfica</label>
+            <input
+              type="text"
+              class="form-control"
+              id="tarjetaGrafica"
+              formControlName="tarjetaGrafica"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="tieneTarjetaRed">¿Tiene Tarjeta de Red?</label>
+            <select
+              class="form-control"
+              id="tieneTarjetaRed"
+              formControlName="tieneTarjetaRed"
+            >
+              <option value="true">Sí</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="tieneTarjetaSonido">¿Tiene Tarjeta de Sonido?</label>
+            <select
+              class="form-control"
+              id="tieneTarjetaSonido"
+              formControlName="tieneTarjetaSonido"
+            >
+              <option value="true">Sí</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="gabinete">Gabinete</label>
+            <input
+              type="text"
+              class="form-control"
+              id="gabinete"
+              formControlName="gabinete"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="perifericosEntrada">Periféricos de Entrada</label>
+            <input
+              type="text"
+              class="form-control"
+              id="perifericosEntrada"
+              formControlName="perifericosEntrada"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="perifericosSalida">Periféricos de Salida</label>
+       <select
+  class="form-control"
+  id="perifericosSalida"
+  formControlName="perifericosSalida"
+>
+  <option value="">Seleccione un monitor</option>
+  <option *ngFor="let monitor of monitoresDisponibles" [value]="monitor.id">
+    {{ monitor.numeroSerie }}
+  </option>
+</select>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="componentes">Componentes</label>
+            <input
+              type="text"
+              class="form-control"
+              id="componentes"
+              formControlName="componentes"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="accesorios">Accesorios</label>
+            <input
+              type="text"
+              class="form-control"
+              id="accesorios"
+              formControlName="accesorios"
+            />
+          </div>
+        </div>
+      </div>
     </div>
-  </form>
-</div>
+
+    <!-- Software y Red -->
+    <div class="equipo-card">
+      <div class="card-header text-center text-white bg-primary">
+        Software y Red
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="sistemaOperativo">Sistema Operativo</label>
+            <input
+              type="text"
+              class="form-control"
+              id="sistemaOperativo"
+              formControlName="sistemaOperativo"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="versionSO">Versión del S.O.</label>
+            <input
+              type="text"
+              class="form-control"
+              id="versionSO"
+              formControlName="versionSO"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="driversInstalados">Drivers Instalados</label>
+            <input
+              type="text"
+              class="form-control"
+              id="driversInstalados"
+              formControlName="driversInstalados"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="programasInstalados">Programas Instalados</label>
+            <input
+              type="text"
+              class="form-control"
+              id="programasInstalados"
+              formControlName="programasInstalados"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="utilidadesSistema">Utilidades</label>
+            <input
+              type="text"
+              class="form-control"
+              id="utilidadesSistema"
+              formControlName="utilidadesSistema"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="direccionIP">Dirección IP</label>
+            <input
+              type="text"
+              class="form-control"
+              id="direccionIP"
+              formControlName="direccionIP"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="direccionMAC">Dirección MAC</label>
+            <input
+              type="text"
+              class="form-control"
+              id="direccionMAC"
+              formControlName="direccionMAC"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="estado">Estado</label>
+            <input
+              type="text"
+              class="form-control"
+              id="estado"
+              formControlName="estado"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <button type="reset" class="btn btn-secondary">Cancelar</button>
+  </div>
+</form>

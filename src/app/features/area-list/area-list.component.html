@@ -45,6 +45,11 @@
       </tbody>
     </table>
   </div>
+  <div class="pagination-controls">
+  <button (click)="previousPage()" [disabled]="currentPage === 0">Anterior</button>
+  <span>Página {{ currentPage + 1 }}</span>
+  <button (click)="nextPage()" [disabled]="(currentPage + 1) * pageSize >= totalElements">Siguiente</button>
+</div>
 
   <div class="no-data" *ngIf="!loading && areas.length === 0">
     <p>No hay áreas registradas.</p>

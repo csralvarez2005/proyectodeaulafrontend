@@ -8,10 +8,15 @@ import { AreaService } from 'src/app/services/area.service';
   templateUrl: './area-list.component.html',
   styleUrls: ['./area-list.component.css']
 })
-export class AreaListComponent implements OnInit{
+export class AreaListComponent implements OnInit {
   areas: Area[] = [];
   loading = false;
   error = '';
+
+  // Variables para la paginación
+  currentPage = 0;
+  pageSize = 5;
+  totalElements = 0;
 
   constructor(
     private areaService: AreaService,
@@ -24,9 +29,10 @@ export class AreaListComponent implements OnInit{
 
   loadAreas(): void {
     this.loading = true;
-    this.areaService.getAllAreas().subscribe(
-      (data: Area[]) => {
-        this.areas = data;
+    this.areaService.getAllAreasPaginated(this.currentPage, this.pageSize).subscribe(
+      (response) => {
+        this.areas = response.content; // contenido de la página
+        this.totalElements = response.totalElements; // total de registros
         this.loading = false;
       },
       error => {
@@ -57,4 +63,17 @@ export class AreaListComponent implements OnInit{
     this.router.navigate(['/dashboard/areas/detail', id]);
   }
 
+  nextPage(): void {
+    if ((this.currentPage + 1) * this.pageSize < this.totalElements) {
+      this.currentPage++;
+      this.loadAreas();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadAreas();
+    }
+  }
 }

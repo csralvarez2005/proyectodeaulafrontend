@@ -3,6 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Equipo } from '../../models/equipo.model';
 import { EquipoService } from '../../services/equipo.service';
+import { Monitor } from '../../models/monitor.model';
+import { MonitorService } from '../../services/monitor.service';
+import { Area } from 'src/app/models/area.model';
+import { AreaService } from 'src/app/services/area.service';
 
 @Component({
   selector: 'app-equipo-form',
@@ -10,78 +14,41 @@ import { EquipoService } from '../../services/equipo.service';
   styleUrls: ['./equipo-form.component.css']
 })
 export class EquipoFormComponent implements OnInit {
+
+  equipoForm: FormGroup;
+  isEditMode: boolean = false;
+  equipoId: number = 0;
+  loading = false;
+  submitted = false;
+  successMessage = '';
+  errorMessage = '';
+
+  monitoresDisponibles: Monitor[] = [];
+  monitoresAsignados: Monitor[] = [];
+  monitorSeleccionado: number | null = null;
+
+  areas: any[] = [];
+  areasSeleccionadas: Area[] = [];
+  areaSeleccionada: number | null = null;
+
+  abreviaturasPorArea: { [key: string]: string } = {
+  'Oficina Sistemas': 'SIS',
+  'Recurso Humano': 'RHUM',
+  'Oficina Cartera': 'OFCART'
+};
+
   
-  equipoForm: FormGroup = this.formBuilder.group({ 
-    codigoEquipo: ['', Validators.required],
-    descripcion: [''],
-    tipo: ['', Validators.required],
-    modelo: ['', Validators.required],
-    marca: ['', Validators.required],
-    serie: ['', Validators.required],
-    ubicacionDelEquipo: [''],
-    utilizacion: [''],
-    recibidoPor: [''],
-    proveedor: [''],
-    ordenDeCompra: [''],
-    factura: [''],
-    fechaDeCompra: ['', Validators.required],
-    fechaFinGarantia: [''],
-    garantia: [''],
-    precio: [0, [Validators.required, Validators.min(0)]],
-    procesador: [''],
-    memoriaRamGB: [0],
-    almacenamientoGB: [0],
-    tipoAlmacenamiento: [''],
-    placaBase: [''],
-    fuentePoderWatts: [0],
-    tarjetaGrafica: [''],
-    tieneTarjetaRed: [false],
-    tieneTarjetaSonido: [false],
-    gabinete: [''],
-    perifericosEntrada: [''],
-    perifericosSalida: [''],
-    componentes: [''],
-    accesorios: [''],
-    sistemaOperativo: [''],
-    versionSO: [''],
-    driversInstalados: [''],
-    programasInstalados: [''],
-    utilidadesSistema: [''],
-    direccionIP: [''],
-    direccionMAC: [''],
-    estado: ['Activo', Validators.required]
-  }); 
 
-  isEditMode: boolean = false; 
-  equipoId: number = 0; 
-  loading = false; 
-  submitted = false; 
-  successMessage = ''; 
-  errorMessage = ''; 
-
-  constructor( 
-    private formBuilder: FormBuilder, 
-    private route: ActivatedRoute, 
-    private router: Router, 
-    private equipoService: EquipoService 
-  ) { } 
-
-  ngOnInit(): void { 
-    this.initForm(); 
-    this.route.params.subscribe(params => { 
-      if (params['id']) { 
-        this.isEditMode = true; 
-        this.equipoId = +params['id']; 
-        this.loadEquipo(this.equipoId); 
-      } 
-    }); 
-  } 
-
-  get f() { return this.equipoForm.controls; } 
-
-  initForm(): void { 
-    this.equipoForm = this.formBuilder.group({ 
-      codigoEquipo: ['', Validators.required],
+  constructor(
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private equipoService: EquipoService,
+    private monitorService: MonitorService,
+    private areaService: AreaService
+  ) {
+    this.equipoForm = this.formBuilder.group({
+      codigoEquipo: [{ value: '', disabled: true }, Validators.required],
       descripcion: [''],
       tipo: ['', Validators.required],
       modelo: ['', Validators.required],
@@ -118,112 +85,298 @@ export class EquipoFormComponent implements OnInit {
       utilidadesSistema: [''],
       direccionIP: [''],
       direccionMAC: [''],
-      estado: ['Activo', Validators.required]
-    }); 
-  } 
+      estado: ['Activo', Validators.required],
+      monitorIds: [[]],
+      areaIds: [[]],
+      areaSeleccionada: [null] // agregado para manejar la selección
+    });
+  }
 
-  loadEquipo(id: number): void { 
-    this.loading = true; 
-    this.equipoService.getEquipoById(id).subscribe( 
-      (equipo: Equipo) => { 
-        this.equipoForm.patchValue({ 
-          codigoEquipo: equipo.codigoEquipo,
-          descripcion: equipo.descripcion,
-          tipo: equipo.tipo,
-          modelo: equipo.modelo,
-          marca: equipo.marca,
-          serie: equipo.serie,
-          ubicacionDelEquipo: equipo.ubicacionDelEquipo,
-          utilizacion: equipo.utilizacion,
-          recibidoPor: equipo.recibidoPor,
-          proveedor: equipo.proveedor,
-          ordenDeCompra: equipo.ordenDeCompra,
-          factura: equipo.factura,
+  ngOnInit(): void {
+    this.initForm();
+    this.cargarMonitoresDisponibles();
+    this.cargarAreas();
+
+    this.route.params.subscribe(params => {
+      if (params['id']) {
+        this.isEditMode = true;
+        this.equipoId = +params['id'];
+        this.loadEquipo(this.equipoId);
+        this.cargarMonitoresAsignados(this.equipoId);
+        this.cargarAreasAsignadas(this.equipoId);
+      }
+    });
+  }
+
+  get f() { return this.equipoForm.controls; }
+
+  initForm(): void {}
+
+  loadEquipo(id: number): void {
+    this.loading = true;
+    this.equipoService.getEquipoById(id).subscribe(
+      (equipo: Equipo) => {
+        this.equipoForm.patchValue({
+          ...equipo,
           fechaDeCompra: this.formatDate(equipo.fechaDeCompra),
           fechaFinGarantia: this.formatDate(equipo.fechaFinGarantia),
-          garantia: equipo.garantia,
-          precio: equipo.precio,
-          procesador: equipo.procesador,
-          memoriaRamGB: equipo.memoriaRamGB,
-          almacenamientoGB: equipo.almacenamientoGB,
-          tipoAlmacenamiento: equipo.tipoAlmacenamiento,
-          placaBase: equipo.placaBase,
-          fuentePoderWatts: equipo.fuentePoderWatts,
-          tarjetaGrafica: equipo.tarjetaGrafica,
-          tieneTarjetaRed: equipo.tieneTarjetaRed,
-          tieneTarjetaSonido: equipo.tieneTarjetaSonido,
-          gabinete: equipo.gabinete,
-          perifericosEntrada: equipo.perifericosEntrada,
-          perifericosSalida: equipo.perifericosSalida,
-          componentes: equipo.componentes,
-          accesorios: equipo.accesorios,
-          sistemaOperativo: equipo.sistemaOperativo,
-          versionSO: equipo.versionSO,
-          driversInstalados: equipo.driversInstalados,
-          programasInstalados: equipo.programasInstalados,
-          utilidadesSistema: equipo.utilidadesSistema,
-          direccionIP: equipo.direccionIP,
-          direccionMAC: equipo.direccionMAC,
-          estado: equipo.estado
-        }); 
-        this.loading = false; 
-      }, 
-      error => { 
-        this.errorMessage = 'Error al cargar los datos del equipo'; 
-        this.loading = false; 
-      } 
-    ); 
-  } 
+        });
+        this.loading = false;
+      },
+      error => {
+        this.errorMessage = 'Error al cargar los datos del equipo';
+        this.loading = false;
+      }
+    );
+  }
 
-  formatDate(date: Date): string { 
-    if (!date) return ''; 
-    const d = new Date(date); 
-    let month = '' + (d.getMonth() + 1); 
-    let day = '' + d.getDate(); 
-    const year = d.getFullYear(); 
+  cargarMonitoresDisponibles(): void {
+    this.monitorService.getAllMonitores().subscribe(
+      (monitores: Monitor[]) => {
+        this.monitoresDisponibles = monitores.filter(monitor => !monitor.equipo);
+      },
+      error => {
+        this.errorMessage = 'Error al cargar monitores disponibles';
+        console.error('Error al cargar monitores:', error);
+      }
+    );
+  }
 
-    if (month.length < 2) month = '0' + month; 
-    if (day.length < 2) day = '0' + day; 
+  cargarMonitoresAsignados(equipoId: number): void {
+    this.equipoService.getMonitoresByEquipoId(equipoId).subscribe(
+      (monitores: Monitor[]) => {
+        this.monitoresAsignados = monitores;
+        const monitorIds = monitores.map(m => m.id);
+        this.equipoForm.patchValue({ monitorIds });
+      },
+      error => {
+        this.errorMessage = 'Error al cargar monitores asignados';
+        console.error('Error al cargar monitores asignados:', error);
+      }
+    );
+  }
 
-    return [year, month, day].join('-'); 
-  } 
+  agregarMonitor(monitorId: number): void {
+    if (!monitorId) return;
 
-  onSubmit(): void { 
-    this.submitted = true; 
-    if (this.equipoForm.invalid) { 
-      return; 
-    } 
-    this.loading = true; 
-    const equipo: Equipo = this.equipoForm.value; 
-    if (this.isEditMode) { 
-      equipo.id = this.equipoId; 
-      this.equipoService.updateEquipo(this.equipoId, equipo).subscribe( 
-        response => { 
-          this.successMessage = 'Equipo actualizado con éxito'; 
-          this.loading = false; 
-          setTimeout(() => this.goBack(), 2000); 
-        }, 
-        error => { 
-          this.errorMessage = 'Error al actualizar el equipo'; 
-          this.loading = false; 
-        } 
-      ); 
-    } else { 
-      this.equipoService.createEquipo(equipo).subscribe( 
-        response => { 
-          this.successMessage = 'Equipo creado con éxito'; 
-          this.loading = false; 
-          setTimeout(() => this.goBack(), 2000); 
-        }, 
-        error => { 
-          this.errorMessage = 'Error al crear el equipo'; 
-          this.loading = false; 
-        } 
-      ); 
-    } 
-  } 
+    if (!this.isEditMode) {
+      const monitorIds = this.equipoForm.get('monitorIds')?.value || [];
+      if (!monitorIds.includes(monitorId)) {
+        monitorIds.push(monitorId);
+        this.equipoForm.patchValue({ monitorIds });
+        const monitor = this.monitoresDisponibles.find(m => m.id === monitorId);
+        if (monitor) {
+          this.monitoresAsignados.push(monitor);
+          this.monitoresDisponibles = this.monitoresDisponibles.filter(m => m.id !== monitorId);
+        }
+      }
+      this.monitorSeleccionado = null;
+    } else {
+      this.loading = true;
+      this.equipoService.agregarMonitor(this.equipoId, monitorId).subscribe(
+        () => {
+          this.successMessage = 'Monitor agregado con éxito';
+          this.loading = false;
+          this.cargarMonitoresDisponibles();
+          this.cargarMonitoresAsignados(this.equipoId);
+          this.monitorSeleccionado = null;
+        },
+        error => {
+          this.errorMessage = 'Error al agregar monitor';
+          this.loading = false;
+          console.error('Error al agregar monitor:', error);
+        }
+      );
+    }
+  }
 
-  goBack(): void { 
-    this.router.navigate(['/dashboard/equipo']); 
-  } 
+  quitarMonitor(monitorId: number): void {
+    if (!this.isEditMode) {
+      let monitorIds = this.equipoForm.get('monitorIds')?.value || [];
+      monitorIds = monitorIds.filter((id: number) => id !== monitorId);
+      this.equipoForm.patchValue({ monitorIds });
+      const monitor = this.monitoresAsignados.find(m => m.id === monitorId);
+      if (monitor) {
+        this.monitoresDisponibles.push(monitor);
+        this.monitoresAsignados = this.monitoresAsignados.filter(m => m.id !== monitorId);
+      }
+    } else {
+      this.loading = true;
+      this.equipoService.quitarMonitor(this.equipoId, monitorId).subscribe(
+        () => {
+          this.successMessage = 'Monitor quitado con éxito';
+          this.loading = false;
+          this.cargarMonitoresDisponibles();
+          this.cargarMonitoresAsignados(this.equipoId);
+        },
+        error => {
+          this.errorMessage = 'Error al quitar monitor';
+          this.loading = false;
+          console.error('Error al quitar monitor:', error);
+        }
+      );
+    }
+  }
+
+  formatDate(date: Date | null | undefined): string {
+    if (!date) return '';
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  onSubmit(): void {
+    this.submitted = true;
+    if (this.equipoForm.invalid) return;
+
+    this.loading = true;
+    const equipo: Equipo = this.equipoForm.getRawValue();
+    if (this.isEditMode) {
+      equipo.id = this.equipoId;
+      this.equipoService.updateEquipo(this.equipoId, equipo).subscribe(
+        () => {
+          this.successMessage = 'Equipo actualizado con éxito';
+          this.loading = false;
+          setTimeout(() => this.goBack(), 2000);
+        },
+        () => {
+          this.errorMessage = 'Error al actualizar el equipo';
+          this.loading = false;
+        }
+      );
+    } else {
+      this.equipoService.createEquipo(equipo).subscribe(
+        () => {
+          this.successMessage = 'Equipo creado con éxito';
+          this.loading = false;
+          setTimeout(() => this.goBack(), 2000);
+        },
+        () => {
+          this.errorMessage = 'Error al crear el equipo';
+          this.loading = false;
+        }
+      );
+    }
+  }
+
+  cargarAreas(): void {
+    this.areaService.getAllAreas().subscribe(
+      (areas: Area[]) => {
+        this.areas = areas;
+      },
+      error => {
+        this.errorMessage = 'Error al cargar áreas';
+        console.error('Error al cargar áreas:', error);
+      }
+    );
+  }
+
+  cargarAreasAsignadas(equipoId: number): void {
+    this.equipoService.getAreasByEquipoId(equipoId).subscribe(
+      (areas: Area[]) => {
+        this.areasSeleccionadas = areas;
+        const areaIds = areas.map(a => a.id);
+        this.equipoForm.patchValue({ areaIds });
+      },
+      error => {
+        this.errorMessage = 'Error al cargar áreas asignadas';
+        console.error('Error al cargar áreas asignadas:', error);
+      }
+    );
+  }
+
+  agregarArea(areaId: number): void {
+    if (!areaId) return;
+
+    if (!this.isEditMode) {
+      const areaIds = this.equipoForm.get('areaIds')?.value || [];
+
+      if (!areaIds.includes(areaId)) {
+        areaIds.push(areaId);
+        this.equipoForm.patchValue({ areaIds });
+
+        const area = this.areas.find(a => a.id === areaId);
+        if (area) {
+          this.areasSeleccionadas.push(area);
+
+          if (!this.equipoForm.get('codigoEquipo')?.value && (area as any).abreviatura) {
+            this.equipoService.generarCodigoEquipo((area as any).abreviatura).subscribe({
+              next: (codigo: string) => {
+                this.equipoForm.patchValue({ codigoEquipo: codigo });
+              },
+              error: (error) => {
+                this.errorMessage = 'Error al generar el código del equipo';
+                console.error('Error al generar código:', error);
+              }
+            });
+          }
+        }
+      }
+
+      this.areaSeleccionada = null;
+    } else {
+      this.loading = true;
+      this.loading = false;
+      this.areaSeleccionada = null;
+    }
+  }
+
+  quitarArea(areaId: number): void {
+    if (!this.isEditMode) {
+      let areaIds = this.equipoForm.get('areaIds')?.value || [];
+      areaIds = areaIds.filter((id: number) => id !== areaId);
+      this.equipoForm.patchValue({ areaIds });
+      this.areasSeleccionadas = this.areasSeleccionadas.filter(a => a.id !== areaId);
+    } else {
+      this.loading = true;
+      this.loading = false;
+    }
+  }
+
+onAreaSeleccionada(): void {
+  const selectedId = this.equipoForm.get('areaSeleccionada')?.value;
+  const area = this.areas.find(a => a.id === +selectedId);
+
+  if (area && area.abreviatura) {
+    this.equipoService.generarCodigoEquipo(area.abreviatura).subscribe({
+      next: (codigo: string) => {
+        this.equipoForm.patchValue({
+          codigoEquipo: codigo,
+          areaIds: [area.id]
+        });
+        this.areasSeleccionadas = [area];
+      },
+      error: (error) => {
+        this.errorMessage = 'Error al generar el código del equipo';
+        console.error('Error al generar código desde backend:', error);
+      }
+    });
+  } else {
+    console.warn('Área seleccionada no tiene abreviatura:', area);
+  }
+}
+
+  onAreaChange(areaId: number): void {
+    const area = this.areas.find(a => a.id === +areaId);
+    if (!area || !(area as any).abreviatura) {
+      return;
+    }
+
+    this.equipoService.generarCodigoEquipo((area as any).abreviatura).subscribe(
+      (codigo: string) => {
+        this.equipoForm.patchValue({ codigoEquipo: codigo });
+        this.equipoForm.patchValue({ areaIds: [area.id] });
+        this.areasSeleccionadas = [area];
+      },
+      error => {
+        console.error('Error al generar el código de equipo:', error);
+      }
+    );
+  }
+
+  goBack(): void {
+    this.router.navigate(['/dashboard/equipo']);
+  }
 }
