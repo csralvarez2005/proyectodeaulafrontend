@@ -1,9 +1,12 @@
 <div class="areas-container">
   <div class="header">
     <h2>Gestión de Áreas</h2>
-    <button class="btn btn-primary" [routerLink]="['/dashboard/areas/crear']">
-      Registrar Área
-    </button>
+    <div class="header-right">
+   
+      <button class="btn btn-primary" [routerLink]="['/dashboard/areas/crear']">
+        Registrar Área
+      </button>
+    </div>
   </div>
 
   <div class="alert alert-danger" *ngIf="error">
@@ -22,6 +25,7 @@
           <th>ID</th>
           <th>Nombre</th>
           <th>Tipo</th>
+          <th>Abreviatura</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -30,6 +34,7 @@
           <td>{{ area.id }}</td>
           <td>{{ area.nombre }}</td>
           <td>{{ area.tipo }}</td>
+          <td>{{ area.abreviatura }}</td>
           <td class="actions">
             <button class="btn btn-info btn-sm" (click)="viewDetails(area.id)">
               <i class="fas fa-eye"></i>
@@ -44,12 +49,16 @@
         </tr>
       </tbody>
     </table>
-  </div>
-  <div class="pagination-controls">
-  <button (click)="previousPage()" [disabled]="currentPage === 0">Anterior</button>
-  <span>Página {{ currentPage + 1 }}</span>
-  <button (click)="nextPage()" [disabled]="(currentPage + 1) * pageSize >= totalElements">Siguiente</button>
+      <div class="text-end mt-3">
+  <span class="record-count">Total de registros: {{ totalElements }}</span>
 </div>
+  </div>
+
+  <div class="pagination-controls">
+    <button (click)="previousPage()" [disabled]="currentPage === 0">Anterior</button>
+    <span>Página {{ currentPage + 1 }}</span>
+    <button (click)="nextPage()" [disabled]="(currentPage + 1) * pageSize >= totalElements">Siguiente</button>
+  </div>
 
   <div class="no-data" *ngIf="!loading && areas.length === 0">
     <p>No hay áreas registradas.</p>

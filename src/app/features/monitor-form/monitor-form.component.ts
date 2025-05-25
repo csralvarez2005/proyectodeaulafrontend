@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Monitor } from '../../models/monitor.model';
 import { MonitorService } from '../../services/monitor.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-monitor-form',
@@ -109,7 +110,7 @@ export class MonitorFormComponent implements OnInit {
         this.loading = false;
       },
       error => {
-        this.errorMessage = 'Error al cargar los datos del monitor';
+        Swal.fire('Error', 'Error al cargar los datos del monitor', 'error');
         this.loading = false;
       }
     );
@@ -138,24 +139,24 @@ export class MonitorFormComponent implements OnInit {
     if (this.isEditMode) {
       this.monitorService.updateMonitor(this.monitorId, monitor).subscribe(
         response => {
-          this.successMessage = 'Monitor actualizado con éxito';
+          Swal.fire('Actualizado', 'Monitor actualizado con éxito', 'success');
           this.loading = false;
           setTimeout(() => this.goBack(), 2000);
         },
         error => {
-          this.errorMessage = 'Error al actualizar el monitor';
+          Swal.fire('Error', 'Error al actualizar el monitor', 'error');
           this.loading = false;
         }
       );
     } else {
       this.monitorService.createMonitor(monitor).subscribe(
         response => {
-          this.successMessage = 'Monitor creado con éxito';
+          Swal.fire('Creado', 'Monitor creado con éxito', 'success');
           this.loading = false;
           setTimeout(() => this.goBack(), 2000);
         },
         error => {
-          this.errorMessage = 'Error al crear el monitor';
+          Swal.fire('Error', 'Error al crear el monitor', 'error');
           this.loading = false;
         }
       );

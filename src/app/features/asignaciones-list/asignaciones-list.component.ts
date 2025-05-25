@@ -14,6 +14,7 @@ export class AsignacionesListComponent implements OnInit {
   error = '';
   currentPage = 0;
   totalPages = 1;
+   totalElements = 0;
  
 
   constructor(
@@ -25,12 +26,14 @@ export class AsignacionesListComponent implements OnInit {
     this.getAsignaciones();
   }
 
-  getAsignaciones(page: number = 0): void {
+getAsignaciones(page: number = 0): void {
     this.loading = true;
-    this.asignacionService.getAsignaciones(page).subscribe(
+    const size = 10; // Definimos un tamaño de página predeterminado
+    this.asignacionService.getAsignaciones(page, size).subscribe(
       (data: any) => {
         this.asignaciones = data.content || data;
         this.totalPages = data.totalPages || 1;
+        this.totalElements = data.totalElements || 0; // Capturamos el total de elementos
         this.currentPage = page;
         this.loading = false;
       },
@@ -41,7 +44,7 @@ export class AsignacionesListComponent implements OnInit {
     );
   }
 
-  onPageChange(page: number): void {
+    onPageChange(page: number): void {
     this.getAsignaciones(page);
   }
 

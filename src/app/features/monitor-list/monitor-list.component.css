@@ -1,6 +1,12 @@
 .monitores-container {
   padding: 20px;
 }
+.monitor-list-container {
+  padding: 20px;
+  border: 2px solid #007bff; /* Borde azul */
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.1);
+}
 
 .header {
   display: flex;
@@ -87,15 +93,56 @@
 
 .pagination-container {
   display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: flex-end;
-  margin-top: 15px;
+  width: 100%;
+  max-width: 800px; /* Limita el ancho para un diseño más compacto */
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
   gap: 10px;
 }
 
 .page-info {
-  font-size: 1rem;
-  color: #555;
+  margin: 0 10px;
+  font-size: 14px;
+  color: #666;
+}
+
+.total-records-label {
+  margin-left: auto;
+  padding-right: 10px;
+}
+
+.record-count {
+  background-color: #007bff;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 6px 16px;
+  border-radius: 30px;
+  font-size: 14px;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 576px) {
+  .pagination-wrapper {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .total-records-label {
+    margin-left: 0;
+    margin-top: 10px;
+  }
 }
 
 .alert {

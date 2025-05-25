@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Area } from 'src/app/models/area.model';
 import { AreaService } from 'src/app/services/area.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-area-list',
@@ -12,6 +13,8 @@ export class AreaListComponent implements OnInit {
   areas: Area[] = [];
   loading = false;
   error = '';
+    isEditMode = false; 
+    submitted = false;
 
   // Variables para la paginación
   currentPage = 0;
@@ -46,18 +49,28 @@ export class AreaListComponent implements OnInit {
     this.router.navigate(['/dashboard/areas/edit', id]);
   }
 
-  deleteArea(id: number): void {
-    if (confirm('¿Está seguro que desea eliminar esta área?')) {
+ deleteArea(id: number): void {
+  Swal.fire({
+    title: '¿Está seguro?',
+    text: 'Esta acción eliminará el área permanentemente.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
       this.areaService.deleteArea(id).subscribe(
         () => {
+          Swal.fire('Eliminado', 'El área ha sido eliminada.', 'success');
           this.loadAreas();
         },
         error => {
-          this.error = 'Error al eliminar el área';
+          Swal.fire('Error', 'Error al eliminar el área.', 'error');
         }
       );
     }
-  }
+  });
+}
 
   viewDetails(id: number): void {
     this.router.navigate(['/dashboard/areas/detail', id]);

@@ -55,6 +55,7 @@
           </td>
         </tr>
       </tbody>
+      
     </table>
 
     <!-- Paginación -->
@@ -78,7 +79,11 @@
       </button>
     </div>
   </div>
-
+<div class="d-flex justify-content-end mt-3">
+  <div class="badge bg-primary fs-6 p-2 rounded-pill shadow-sm">
+    Total de funcionarios registrados: {{ totalItems }}
+  </div>
+</div>
   <div class="no-data" *ngIf="!loading && funcionarios.length === 0">
     <p>No hay funcionarios registrados.</p>
       <button class="btn btn-primary" [routerLink]="['/funcionarios/crear']"> 

@@ -48,15 +48,27 @@
         </tr>
       </tbody>
     </table>
-    <div class="pagination-container">
-      <button class="btn btn-sm" [disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)">Anterior</button>
-      <span class="page-info">Página {{ currentPage + 1 }} de {{ totalPages }}</span>
-      <button class="btn btn-sm" [disabled]="currentPage === totalPages - 1" (click)="onPageChange(currentPage + 1)">Siguiente</button>
+    <div class="table-responsive" *ngIf="!loading && asignaciones.length > 0">
+    <!-- ... tabla sin cambios ... -->
+    
+    <div class="pagination-wrapper">
+      <div class="pagination-container">
+        <button class="btn btn-sm" [disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)">Anterior</button>
+        <span class="page-info">Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+        <button class="btn btn-sm" [disabled]="currentPage === totalPages - 1" (click)="onPageChange(currentPage + 1)">Siguiente</button>
+      </div>
+      <div class="total-records-label">
+        <span class="record-count">Total de registros: {{ totalElements }}</span>
+      </div>
     </div>
+  </div>
+
+  <!-- ... resto del código sin cambios ... -->
+</div>
   </div>
 
   <div class="no-data" *ngIf="!loading && asignaciones.length === 0">
     <p>No hay asignaciones registradas.</p>
     <button class="btn btn-primary" [routerLink]="['/dashboard/asignaciones/crear']">Registrar Asignación</button>
   </div>
-</div>
+

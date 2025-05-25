@@ -58,26 +58,32 @@
     </table>
 
     <!-- Paginación -->
-    <div class="pagination-container">
-      <button 
-        class="btn btn-sm" 
-        [disabled]="currentPage === 0"
-        (click)="onPageChange(currentPage - 1)">
-        Anterior
-      </button>
+      <div class="pagination-wrapper">
+        <div class="pagination-container">
+        <button 
+          class="btn btn-sm" 
+          [disabled]="currentPage === 0"
+          (click)="onPageChange(currentPage - 1)">
+          Anterior
+        </button>
+        
+        <span class="page-info">
+          Página {{ currentPage + 1 }} de {{ totalPages }}
+        </span>
+        
+        <button 
+          class="btn btn-sm" 
+          [disabled]="currentPage === totalPages - 1"
+          (click)="onPageChange(currentPage + 1)">
+          Siguiente
+        </button>
+      </div>
       
-      <span class="page-info">
-        Página {{ currentPage + 1 }} de {{ totalPages }}
-      </span>
-      
-      <button 
-        class="btn btn-sm" 
-        [disabled]="currentPage === totalPages - 1"
-        (click)="onPageChange(currentPage + 1)">
-        Siguiente
-      </button>
+      <!-- Label para mostrar el total de registros -->
+      <div class="total-records-label">        
+          <span class="record-count">Total de registros: {{ totalItems }}</span>
+      </div>
     </div>
-  </div>
 
   <div class="no-data" *ngIf="!loading && equipos.length === 0">
     <p>No hay equipos registrados.</p>

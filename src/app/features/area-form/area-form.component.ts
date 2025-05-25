@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Area } from 'src/app/models/area.model';
 import { AreaService } from 'src/app/services/area.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-area-form',
@@ -21,18 +22,15 @@ export class AreaFormComponent implements OnInit {
   areaId: number = 0;
   loading = false;
   submitted = false;
-  successMessage = '';
-  errorMessage = '';
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private areaService: AreaService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    // Verificar si estamos en modo edición
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.isEditMode = true;
@@ -42,7 +40,6 @@ export class AreaFormComponent implements OnInit {
     });
   }
 
-  // Getter para acceder fácilmente a los controles del formulario
   get f() { return this.areaForm.controls; }
 
   loadArea(id: number): void {
@@ -57,7 +54,7 @@ export class AreaFormComponent implements OnInit {
         this.loading = false;
       },
       error => {
-        this.errorMessage = 'Error al cargar los datos del área';
+        Swal.fire('Error', 'Error al cargar los datos del área', 'error');
         this.loading = false;
       }
     );
@@ -65,37 +62,36 @@ export class AreaFormComponent implements OnInit {
 
   onSubmit(): void {
     this.submitted = true;
-    
-    // Detener si el formulario es inválido
+
     if (this.areaForm.invalid) {
       return;
     }
 
     this.loading = true;
     const area: Area = this.areaForm.value;
-    
+
     if (this.isEditMode) {
       area.id = this.areaId;
       this.areaService.updateArea(this.areaId, area).subscribe(
-        response => {
-          this.successMessage = 'Área actualizada con éxito';
+        () => {
+          Swal.fire('Actualizado', 'Área actualizada con éxito', 'success');
           this.loading = false;
-          setTimeout(() => this.goBack(), 2000);
+          setTimeout(() => this.goBack(), 1500);
         },
         error => {
-          this.errorMessage = 'Error al actualizar el área';
+          Swal.fire('Error', 'Error al actualizar el área', 'error');
           this.loading = false;
         }
       );
     } else {
       this.areaService.createArea(area).subscribe(
-        response => {
-          this.successMessage = 'Área creada con éxito';
+        () => {
+          Swal.fire('Creado', 'Área creada con éxito', 'success');
           this.loading = false;
-          setTimeout(() => this.goBack(), 2000);
+          setTimeout(() => this.goBack(), 1500);
         },
         error => {
-          this.errorMessage = 'Error al crear el área';
+          Swal.fire('Error', 'Error al crear el área', 'error');
           this.loading = false;
         }
       );

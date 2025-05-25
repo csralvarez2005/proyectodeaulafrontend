@@ -16,7 +16,7 @@ export class FuncionarioListComponent implements OnInit{
   
   // Variables para paginación
   currentPage = 0;
-  pageSize = 10;
+  pageSize = 5;
   totalItems = 0;
   totalPages = 0;
 

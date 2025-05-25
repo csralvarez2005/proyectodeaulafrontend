@@ -7,6 +7,7 @@ import { Monitor } from '../../models/monitor.model';
 import { MonitorService } from '../../services/monitor.service';
 import { Area } from 'src/app/models/area.model';
 import { AreaService } from 'src/app/services/area.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-equipo-form',
@@ -32,12 +33,10 @@ export class EquipoFormComponent implements OnInit {
   areaSeleccionada: number | null = null;
 
   abreviaturasPorArea: { [key: string]: string } = {
-  'Oficina Sistemas': 'SIS',
-  'Recurso Humano': 'RHUM',
-  'Oficina Cartera': 'OFCART'
-};
-
-  
+    'Oficina Sistemas': 'SIS',
+    'Recurso Humano': 'RHUM',
+    'Oficina Cartera': 'OFCART'
+  };
 
   constructor(
     private formBuilder: FormBuilder,
@@ -88,7 +87,7 @@ export class EquipoFormComponent implements OnInit {
       estado: ['Activo', Validators.required],
       monitorIds: [[]],
       areaIds: [[]],
-      areaSeleccionada: [null] // agregado para manejar la selección
+      areaSeleccionada: [null]
     });
   }
 
@@ -175,14 +174,14 @@ export class EquipoFormComponent implements OnInit {
       this.loading = true;
       this.equipoService.agregarMonitor(this.equipoId, monitorId).subscribe(
         () => {
-          this.successMessage = 'Monitor agregado con éxito';
+          Swal.fire('Éxito', 'Monitor agregado con éxito', 'success');
           this.loading = false;
           this.cargarMonitoresDisponibles();
           this.cargarMonitoresAsignados(this.equipoId);
           this.monitorSeleccionado = null;
         },
         error => {
-          this.errorMessage = 'Error al agregar monitor';
+          Swal.fire('Error', 'Error al agregar monitor', 'error');
           this.loading = false;
           console.error('Error al agregar monitor:', error);
         }
@@ -204,13 +203,13 @@ export class EquipoFormComponent implements OnInit {
       this.loading = true;
       this.equipoService.quitarMonitor(this.equipoId, monitorId).subscribe(
         () => {
-          this.successMessage = 'Monitor quitado con éxito';
+          Swal.fire('Éxito', 'Monitor quitado con éxito', 'success');
           this.loading = false;
           this.cargarMonitoresDisponibles();
           this.cargarMonitoresAsignados(this.equipoId);
         },
         error => {
-          this.errorMessage = 'Error al quitar monitor';
+          Swal.fire('Error', 'Error al quitar monitor', 'error');
           this.loading = false;
           console.error('Error al quitar monitor:', error);
         }
@@ -237,24 +236,24 @@ export class EquipoFormComponent implements OnInit {
       equipo.id = this.equipoId;
       this.equipoService.updateEquipo(this.equipoId, equipo).subscribe(
         () => {
-          this.successMessage = 'Equipo actualizado con éxito';
+          Swal.fire('Actualizado', 'Equipo actualizado con éxito', 'success');
           this.loading = false;
           setTimeout(() => this.goBack(), 2000);
         },
         () => {
-          this.errorMessage = 'Error al actualizar el equipo';
+          Swal.fire('Error', 'Error al actualizar el equipo', 'error');
           this.loading = false;
         }
       );
     } else {
       this.equipoService.createEquipo(equipo).subscribe(
         () => {
-          this.successMessage = 'Equipo creado con éxito';
+          Swal.fire('Creado', 'Equipo creado con éxito', 'success');
           this.loading = false;
           setTimeout(() => this.goBack(), 2000);
         },
         () => {
-          this.errorMessage = 'Error al crear el equipo';
+          Swal.fire('Error', 'Error al crear el equipo', 'error');
           this.loading = false;
         }
       );
@@ -305,9 +304,10 @@ export class EquipoFormComponent implements OnInit {
             this.equipoService.generarCodigoEquipo((area as any).abreviatura).subscribe({
               next: (codigo: string) => {
                 this.equipoForm.patchValue({ codigoEquipo: codigo });
+                Swal.fire('Código generado', `Código generado: ${codigo}`, 'info');
               },
               error: (error) => {
-                this.errorMessage = 'Error al generar el código del equipo';
+                Swal.fire('Error', 'Error al generar el código del equipo', 'error');
                 console.error('Error al generar código:', error);
               }
             });
@@ -329,34 +329,35 @@ export class EquipoFormComponent implements OnInit {
       areaIds = areaIds.filter((id: number) => id !== areaId);
       this.equipoForm.patchValue({ areaIds });
       this.areasSeleccionadas = this.areasSeleccionadas.filter(a => a.id !== areaId);
+      Swal.fire('Área eliminada', 'Área quitada correctamente', 'info');
     } else {
       this.loading = true;
       this.loading = false;
     }
   }
 
-onAreaSeleccionada(): void {
-  const selectedId = this.equipoForm.get('areaSeleccionada')?.value;
-  const area = this.areas.find(a => a.id === +selectedId);
+  onAreaSeleccionada(): void {
+    const selectedId = this.equipoForm.get('areaSeleccionada')?.value;
+    const area = this.areas.find(a => a.id === +selectedId);
 
-  if (area && area.abreviatura) {
-    this.equipoService.generarCodigoEquipo(area.abreviatura).subscribe({
-      next: (codigo: string) => {
-        this.equipoForm.patchValue({
-          codigoEquipo: codigo,
-          areaIds: [area.id]
-        });
-        this.areasSeleccionadas = [area];
-      },
-      error: (error) => {
-        this.errorMessage = 'Error al generar el código del equipo';
-        console.error('Error al generar código desde backend:', error);
-      }
-    });
-  } else {
-    console.warn('Área seleccionada no tiene abreviatura:', area);
+    if (area && area.abreviatura) {
+      this.equipoService.generarCodigoEquipo(area.abreviatura).subscribe({
+        next: (codigo: string) => {
+          this.equipoForm.patchValue({
+            codigoEquipo: codigo,
+            areaIds: [area.id]
+          });
+          this.areasSeleccionadas = [area];
+        },
+        error: (error) => {
+          this.errorMessage = 'Error al generar el código del equipo';
+          console.error('Error al generar código desde backend:', error);
+        }
+      });
+    } else {
+      console.warn('Área seleccionada no tiene abreviatura:', area);
+    }
   }
-}
 
   onAreaChange(areaId: number): void {
     const area = this.areas.find(a => a.id === +areaId);

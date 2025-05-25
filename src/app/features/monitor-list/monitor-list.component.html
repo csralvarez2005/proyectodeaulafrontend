@@ -74,20 +74,17 @@
     </table>
   </div>
 
-  <div class="pagination-container" *ngIf="totalPages > 1">
-    <nav aria-label="Navegación de páginas">
-      <ul class="pagination">
-        <li class="page-item" [class.disabled]="currentPage === 0">
-          <a class="page-link" href="javascript:void(0)" (click)="onPageChange(currentPage - 1)">Anterior</a>
-        </li>
-        <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" 
-            [class.active]="i === currentPage">
-          <a class="page-link" href="javascript:void(0)" (click)="onPageChange(i)">{{ i + 1 }}</a>
-        </li>
-        <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
-          <a class="page-link" href="javascript:void(0)" (click)="onPageChange(currentPage + 1)">Siguiente</a>
-        </li>
-      </ul>
-    </nav>
+  <div class="pagination-container" *ngIf="totalPages > 0">
+    <div class="pagination-wrapper">
+      <div class="pagination-controls">
+        <button class="btn btn-outline-secondary" [disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)">Anterior</button>
+        <span class="page-info">Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+        <button class="btn btn-outline-secondary" [disabled]="currentPage === totalPages - 1" (click)="onPageChange(currentPage + 1)">Siguiente</button>
+      </div>
+      <div class="total-records-label">
+        <span class="record-count">Total de registros: {{ totalElements }}</span>
+      </div>
+    </div>
   </div>
 </div>
+

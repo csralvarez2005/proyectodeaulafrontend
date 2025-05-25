@@ -31,17 +31,17 @@
           <td>{{ impresora.asignadoA }}</td>
           <td>{{ impresora.areaDepartamento }}</td>
           <td>{{ impresora.estadoFisico }}</td>
-       <td class="actions">
-  <button class="btn btn-view btn-sm" (click)="verImpresora(impresora.idImpresora!)">
-    <i class="fas fa-eye"></i>
-  </button>
-  <button class="btn btn-edit btn-sm" (click)="editarImpresora(impresora.idImpresora!)">
-    <i class="fas fa-edit"></i>
-  </button>
-  <button class="btn btn-delete btn-sm" (click)="deleteImpresora(impresora.idImpresora!)">
-    <i class="fas fa-trash-alt"></i>
-  </button>
-</td>
+          <td class="actions">
+            <button class="btn btn-view btn-sm" (click)="verImpresora(impresora.idImpresora!)">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-edit btn-sm" (click)="editarImpresora(impresora.idImpresora!)">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-delete btn-sm" (click)="deleteImpresora(impresora.idImpresora!)">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -55,4 +55,19 @@
     <div class="spinner"></div>
     <span>Cargando...</span>
   </div>
-</div>
+  
+  <!-- Paginación -->
+  <div class="pagination-container" *ngIf="totalPages > 0">
+    <div class="pagination-wrapper">
+      <div class="pagination-controls">
+        <button class="btn btn-outline-secondary" [disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)">Anterior</button>
+        <span class="page-info">Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+        <button class="btn btn-outline-secondary" [disabled]="currentPage === totalPages - 1" (click)="onPageChange(currentPage + 1)">Siguiente</button>
+      </div>
+      <div class="total-records-label">
+        <span class="record-count">Total de registros: {{ totalElements }}</span>
+      </div>
+    </div>
+  </div>    
+  </div>
+

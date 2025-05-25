@@ -9,16 +9,7 @@
   <div class="card">
     <div class="card-body">
       <form [formGroup]="areaForm" (ngSubmit)="onSubmit()">
-        <!-- Alerta de éxito -->
-        <div *ngIf="successMessage" class="alert alert-success">
-          {{ successMessage }}
-        </div>
-                 
-        <!-- Alerta de error -->
-        <div *ngIf="errorMessage" class="alert alert-danger">
-          {{ errorMessage }}
-        </div>
-                 
+
         <div class="row">
           <!-- Nombre -->
           <div class="col-md-6 form-group">
