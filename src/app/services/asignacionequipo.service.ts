@@ -49,4 +49,37 @@ getAsignaciones(page: number, size: number): Observable<any> {
   getAsignacionesByAreaId(areaId: number): Observable<AsignacionEquipo[]> {
     return this.http.get<AsignacionEquipo[]>(`${this.apiUrl}/area/${areaId}`);
   }
+
+  // ☁️ Migrar solo si Mongo está vacío
+// Migrar si Mongo está vacío (con token)
+migrarSiMongoVacio(): Observable<string> {
+  const token = localStorage.getItem('auth-token');
+  return this.http.get(`${this.apiUrl}/migrar/mongo`, {
+    responseType: 'text',
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+}
+
+// 🔁 Migración forzada (retorna cantidad de registros migrados)
+migrarForzado(): Observable<number> {
+  const token = localStorage.getItem('auth-token');
+  return this.http.get<number>(`${this.apiUrl}/migrar/forzado`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+}
+
+// 🧾 Generar y descargar PDF (como Blob)
+migrarYGenerarPdf(): Observable<Blob> {
+  const token = localStorage.getItem('auth-token');
+  return this.http.get(`${this.apiUrl}/migrar/pdf`, {
+    responseType: 'blob',
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+}
 }

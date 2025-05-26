@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { User } from '../models/user.model';
+import { User } from '../models/user.model'; // Asegúrate que contiene la propiedad `token`
 
 const AUTH_API = 'http://localhost:8080/api/auth/';
 
@@ -14,29 +14,25 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class AuthService {
-    private currentUserSubject: BehaviorSubject<any>;
-  public currentUser: Observable<any>;
+  private currentUserSubject: BehaviorSubject<User | null>;
+  public currentUser: Observable<User | null>;
 
   constructor(private http: HttpClient) {
-    this.currentUserSubject = new BehaviorSubject<any>(this.getUserFromStorage());
+    this.currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
-  public get currentUserValue(): any {
+  public get currentUserValue(): User | null {
     return this.currentUserSubject.value;
   }
 
-  login(username: string, password: string): Observable<any> {
-    return this.http.post(
+  login(username: string, password: string): Observable<User> {
+    return this.http.post<User>(
       AUTH_API + 'signin',
-      {
-        username,
-        password
-      },
+      { username, password },
       httpOptions
     ).pipe(
       tap(user => {
-        // Almacenar detalles del usuario y token JWT en localStorage
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
       })
@@ -57,14 +53,13 @@ export class AuthService {
   }
 
   logout(): void {
-    // Eliminar usuario del almacenamiento local
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
   }
 
   isLoggedIn(): boolean {
     const user = this.getUserFromStorage();
-    return !!user && !!user.token;
+    return !!user?.token;
   }
 
   getToken(): string | null {
@@ -72,11 +67,11 @@ export class AuthService {
     return user?.token || null;
   }
 
-  private getUserFromStorage(): any {
+  private getUserFromStorage(): User | null {
     const userStr = localStorage.getItem('currentUser');
     if (userStr) {
       try {
-        return JSON.parse(userStr);
+        return JSON.parse(userStr) as User;
       } catch (e) {
         console.error('Error parsing user from localStorage', e);
         return null;
@@ -84,5 +79,4 @@ export class AuthService {
     }
     return null;
   }
-
 }
